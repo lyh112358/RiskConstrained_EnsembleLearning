@@ -8,7 +8,7 @@ Official implementation for the KSEM 2026 accepted paper: **"Kinematics-Inspired
 
 ---
 
-## 🚀 Overview
+## Overview
 This repository provides a robust machine learning framework designed to solve two critical challenges in real-world tabular data mining:
 - **Extreme Class Imbalance**: Handling datasets where failure/risk rates are < 5%.
 - **Temporal Concept Drift**: Addressing non-stationary data distributions across different academic cohorts.
@@ -17,7 +17,7 @@ By integrating **Temporal Motivation Theory (TMT)** and **physical kinematics**,
 
 ---
 
-## 💡 Key Innovations
+## Key Innovations
 
 ### 1. Kinematics-Inspired Feature Engineering
 Beyond conventional static features (e.g., total scores, online duration), we extract higher-order dynamic patterns:
@@ -40,7 +40,7 @@ A robust fusion of gradient boosting (XGBoost, LightGBM), randomized trees (Extr
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 ```text
 Risk-Constrained-Behavioral-Dynamics/
 ├── data_preprocessing.py          # Penalty-based imputation and temporal feature engineering
@@ -54,7 +54,7 @@ Risk-Constrained-Behavioral-Dynamics/
 
 ---
 
-## 📊 Experimental Results
+## Experimental Results
 Cross-cohort validation on multidimensional educational data (2020–2025 cohorts) demonstrated exceptional robustness against concept drift and extreme imbalance (Imbalance Ratio up to 45.0:1):
 
 | Metric | Proposed Framework (Ours) | XGBoost (Cost-Sensitive) | Deep Baseline (LSTM) |
@@ -68,7 +68,7 @@ Supported by SHAP analysis, early dynamic indicators (RPI & LAcc) exhibit signif
 
 ---
 
-## 🛠 Installation & Usage
+## Installation & Usage
 
 ### 1. Setup Environment
 ```bash
@@ -94,7 +94,7 @@ python shap_analysis.py
 
 ---
 
-## 📝 Citation
+## Citation
 If you find our work, concepts (LAcc/RPI), or this repository useful for your research, please consider citing our paper:
 
 ```bibtex
@@ -108,7 +108,7 @@ If you find our work, concepts (LAcc/RPI), or this repository useful for your re
 
 ---
 
-## 👤 Contact & Developer
+## Contact & Developer
 **Yinghe Li (李英赫)**
 *   Undergraduate Student at Tang Aoqing Class, Jilin University
 *   Email: [13339388066@163.com](mailto:13339388066@163.com)
@@ -118,6 +118,5 @@ If you find our work, concepts (LAcc/RPI), or this repository useful for your re
 
 ---
 
-## ⚖️ License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
+## License
+This project is licensed under the MIT License
