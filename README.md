@@ -1,131 +1,123 @@
-# Kinematics-Inspired Behavioral Dynamics and Risk-Constrained Ensemble Learning for Student Performance Prediction
+# Kinematics-Inspired Behavioral Dynamics and Risk-Constrained Ensemble Learning
 
-## Overview
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![KSEM 2026](https://img.shields.io/badge/Conference-KSEM_2026-brightgreen)](https://ksem.org/)
 
-This repository contains the implementation of a feature extraction and enhancement framework grounded in **Temporal Motivation Theory (TMT)** and psychological prior knowledge, along with a **Recall-Constrained Heterogeneous Ensemble Learning** model for student performance prediction in blended learning environments.
+Official implementation for the KSEM 2026 accepted paper: **"Kinematics-Inspired Behavioral Dynamics and Risk-Constrained Ensemble Learning for Student Performance Prediction in Blended Environments"**.
 
-## Problem Statement
+---
 
-Real-world educational data presents a dual challenge:
-- **Extreme class imbalance**: Failure rates below 10%
-- **Distributional shifts**: Concept drift across academic cohorts
+## 🚀 Overview
+This repository provides a robust machine learning framework designed to solve two critical challenges in real-world tabular data mining:
+- **Extreme Class Imbalance**: Handling datasets where failure/risk rates are < 5%.
+- **Temporal Concept Drift**: Addressing non-stationary data distributions across different academic cohorts.
 
-## Key Features
+By integrating **Temporal Motivation Theory (TMT)** and **physical kinematics**, we engineered novel behavioral dynamics features. Furthermore, we designed a **Recall-Constrained Heterogeneous Ensemble** architecture using Bayesian optimization to prevent the model from falling into the "Accuracy Trap."
 
-### Temporal Motivation Theory (TMT) Based Feature Engineering
+---
 
-Beyond conventional features, we innovatively construct:
+## 💡 Key Innovations
 
-- **Learning Engagement (LE)**: Engagement metrics from learning behavioral data
-- **Learning Stability (LS)**: Stability indicators of learning patterns
-- **Learning Acceleration (LAcc)**: Dynamics of learning pace
-- **Relative Procrastination Index (RPI)**: Cohort-relative procrastination habits
+### 1. Kinematics-Inspired Feature Engineering
+Beyond conventional static features (e.g., total scores, online duration), we extract higher-order dynamic patterns:
+*   **Learning Acceleration (LAcc)**: Quantifies the temporal "rate of detachment" via second-order temporal difference.
+*   **Relative Procrastination Index (RPI)**: Measures cohort-referenced procrastination habits, robust to task difficulty and release timing.
 
-### Recall-Constrained Heterogeneous Ensemble Learning
+### 2. Risk-Constrained Bayesian Optimization
+We embedded an asymmetric recall penalty directly into the objective function of Optuna's Tree-structured Parzen Estimator (TPE) sampler.
 
-- **Bayesian Hyperparameter Optimization**: Recall threshold embedded into Optuna's TPE sampler
-- **Multi-Strategy Fusion**: Stacking and soft voting at decision level
-- **Confusion Matrix-Weighted Optimization**: Dynamically balances prediction coverage and precision
-- **False Alarm Control**: Strictly controls false alarm rates while maximizing recall
-
-## Project Structure
-
+```python
+# Pseudo-code for our asymmetric penalty mechanism
+if current_recall < R_min:
+    penalty = lambda_factor * (R_min - current_recall)
+    objective_score = base_metric - penalty
 ```
-AcademicEarlyWarning_MachineLearning/
-├── dual_fusion_optimization.py    # Two-layer stacking fusion with meta-features
-├── blending_optimization.py       # Base model hyperparameter tuning
-├── shap_analysis.py               # SHAP-based model interpretation
-├── lstm_baseline.py               # LSTM neural network baseline
-├── README.md
-└── requirements.txt
+*This strictly forces the optimizer to explore hyperparameter sub-spaces that guarantee sensitivity to the minority class (at-risk students), avoiding the precision paradox.*
+
+### 3. Heterogeneous Stacking Ensemble
+A robust fusion of gradient boosting (XGBoost, LightGBM), randomized trees (ExtraTrees), and probabilistic models. This dual-layer architecture mitigates variance and bias simultaneously, providing endogenous robustness against monotonic decay.
+
+---
+
+## 📂 Repository Structure
+```text
+Risk-Constrained-Behavioral-Dynamics/
+├── data_preprocessing.py          # Penalty-based imputation and temporal feature engineering
+├── blending_optimization.py       # Optuna-based Bayesian hyperparameter tuning with Recall constraints
+├── dual_fusion_optimization.py    # Stacking heterogeneous base models & meta-learner calibration
+├── lstm_baseline.py               # Cost-sensitive LSTM sequence modeling baseline
+├── shap_analysis.py               # Global interpretability and feature importance analysis
+├── requirements.txt
+└── README.md
 ```
 
-## Installation
+---
 
+## 📊 Experimental Results
+Cross-cohort validation on multidimensional educational data (2020–2025 cohorts) demonstrated exceptional robustness against concept drift and extreme imbalance (Imbalance Ratio up to 45.0:1):
+
+| Metric | Proposed Framework (Ours) | XGBoost (Cost-Sensitive) | Deep Baseline (LSTM) |
+| :--- | :---: | :---: | :---: |
+| **Recall (At-risk)** | **82.35%** | 81.18% | 69.41% |
+| **Specificity** | 71.82% | 67.17% | 71.19% |
+| **G-mean** | **0.7691** | 0.7384 | 0.7029 |
+| **Balanced-ACC** | **0.7709** | 0.7417 | 0.7030 |
+
+Supported by SHAP analysis, early dynamic indicators (RPI & LAcc) exhibit significantly higher predictive power than late-stage static performance metrics.
+
+---
+
+## 🛠 Installation & Usage
+
+### 1. Setup Environment
 ```bash
+git clone https://github.com/lyh112358/Risk-Constrained-Behavioral-Dynamics.git
+cd Risk-Constrained-Behavioral-Dynamics
 pip install -r requirements.txt
 ```
 
-## Requirements
-
-- Python >= 3.8
-- NumPy, Pandas
-- Scikit-learn
-- XGBoost, LightGBM, CatBoost
-- Optuna
-- SHAP
-- PyTorch (for LSTM model)
-- imbalanced-learn (optional, for SMOTE)
-
-## Key Optimization Strategy
-
-### Recall-Constrained Optimization
-
-Our approach embeds a **recall threshold** into the Bayesian hyperparameter optimization process:
-
-```
-if recall < min_recall_threshold:
-    penalty = (min_recall_threshold - recall) * penalty_factor
-    final_score = score - penalty
-```
-
-This enforces high sensitivity towards the minority class (failing students) while maximizing overall performance.
-
-### Confusion Matrix-Weighted Strategy
-
-At the decision level, we employ a confusion matrix-weighted optimization to:
-- Maximize recall for at-risk students
-- Control false alarm rates
-- Dynamically balance prediction coverage and precision
-
-## Experimental Results
-
-Cross-cohort validation on "Fundamentals of Programming" course (2020-2025 cohorts):
-
-| Metric | Value |
-|--------|-------|
-| **Recall (At-risk)** | 82.35% |
-| **Specificity (Passing)** | 71.82% |
-| **G-mean** | 0.7691 |
-
-## Usage
-
-### 1. Base Model Hyperparameter Optimization
-
+### 2. Execute Pipeline
 ```bash
+# Step 1: Feature Extraction & Data Governance
+python data_preprocessing.py
+
+# Step 2: Constrained Optimization for Base Models
 python blending_optimization.py
-```
 
-### 2. Dual-Layer Fusion Optimization
-
-```bash
+# Step 3: Heterogeneous Stacking Ensemble Evaluation
 python dual_fusion_optimization.py
-```
 
-### 3. SHAP Analysis
-
-```bash
+# Step 4: Interpretability (Generates SHAP Summary Plots)
 python shap_analysis.py
 ```
 
-### 4. LSTM Baseline
+---
 
-```bash
-python lstm_baseline.py
-```
-
-## Citation
-
-If you use this code in your research, please cite:
+## 📝 Citation
+If you find our work, concepts (LAcc/RPI), or this repository useful for your research, please consider citing our paper:
 
 ```bibtex
-@article{kinematics_inspired_ensemble_learning,
+@inproceedings{li2026kinematics,
   title={Kinematics-Inspired Behavioral Dynamics and Risk-Constrained Ensemble Learning for Student Performance Prediction in Blended Environments},
-  author={Yinghe Li (Jilin University)},
-  year={2025}
+  author={Li, Yinghe},
+  booktitle={Proceedings of the International Conference on Knowledge Science, Engineering and Management (KSEM)},
+  year={2026}
 }
 ```
 
-## License
+---
 
-MIT License
+## 👤 Contact & Developer
+**Yinghe Li (李英赫)**
+*   Undergraduate Student at Tang Aoqing Class, Jilin University
+*   Email: [13339388066@163.com](mailto:13339388066@163.com)
+*   GitHub: [https://github.com/lyh112358](https://github.com/lyh112358)
+
+*Currently seeking 2026 Summer Internship opportunities in Data Mining / Machine Learning Engineering.*
+
+---
+
+## ⚖️ License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
